@@ -38,13 +38,4 @@ Color generateRandomColor() {
   return colors[Random().nextInt(colors.length)];
 }
 
-// is user registered
-// bool isUserRegistered() {
-//   User? user = Hive.box('myBox').get('user');
 
-//   if (user == null) {
-//     return false;
-//   } else {
-//     return user.address.isEmpty ? false : true;
-//   }
-// }

@@ -42,7 +42,7 @@ class AppRouter {
       //   );
       case addItemRoute:
         return MaterialPageRoute<dynamic>(
-          builder: (_) => const UserFormPage(),
+          builder: (_) => const AddItemPage(),
         );
       // case categoryProductsRoute:
       //   return MaterialPageRoute<dynamic>(

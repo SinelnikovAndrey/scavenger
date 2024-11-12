@@ -13,14 +13,14 @@ import 'package:image_picker/image_picker.dart'; // Import for File handling
 // Define a box name for Hive
 const String itemBoxName = 'items';
 
-class UserFormPage extends StatefulWidget {
-  const UserFormPage({Key? key}) : super(key: key);
+class AddItemPage extends StatefulWidget {
+  const AddItemPage({Key? key}) : super(key: key);
 
   @override
-  State<UserFormPage> createState() => _UserFormPageState();
+  State<AddItemPage> createState() => _AddItemPageState();
 }
 
-class _UserFormPageState extends State<UserFormPage> {
+class _AddItemPageState extends State<AddItemPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _formController = TextEditingController();
@@ -31,7 +31,7 @@ class _UserFormPageState extends State<UserFormPage> {
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _loadItemData();
   }
 
   @override
@@ -58,9 +58,9 @@ class _UserFormPageState extends State<UserFormPage> {
     }
   }
 
-  Future<void> _loadUserData() async {
+  Future<void> _loadItemData() async {
     final box = await Hive.openBox<ItemData>(itemBoxName);
-    final item = box.get('currentUser');
+    final item = box.get('currentItem');
     if (item != null) {
       setState(() {
         _nameController.text = item.name;
@@ -72,14 +72,12 @@ class _UserFormPageState extends State<UserFormPage> {
   }
 
   
-  Future<void> _saveUser() async {
+  Future<void> _saveItem() async {
     if (_formKey.currentState!.validate()) {
-      // Generate a unique ID
       final id = _generateId();
 
-      // Update the UserData object in Hive
       final box = await Hive.openBox<ItemData>(itemBoxName);
-      final updatedUser = ItemData(
+      final updatedItem = ItemData(
         id: id, // Assign the generated ID
         photoUrl: _imageUrl, 
         name: _nameController.text.trim(), 
@@ -88,7 +86,7 @@ class _UserFormPageState extends State<UserFormPage> {
         group: '', 
         description: _descriptionController.text.trim(), // Store the image path in Hive
       );
-      await box.put(id.toString(), updatedUser); // Store by ID
+      await box.put(id.toString(), updatedItem); // Store by ID
 
       // Optionally, navigate back to the previous screen
       Navigator.pop(context);
@@ -99,7 +97,7 @@ class _UserFormPageState extends State<UserFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update User'),
+        title: const Text('Update Item'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -118,7 +116,7 @@ class _UserFormPageState extends State<UserFormPage> {
                   child: const Text('Choose Image'),
                 ),
                 const SizedBox(height: 16.0),
-                // Text Fields for User Information
+
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(labelText: 'Display Name'),
@@ -153,7 +151,7 @@ class _UserFormPageState extends State<UserFormPage> {
                 ),
                 const SizedBox(height: 32.0),
                 ElevatedButton(
-                  onPressed: _saveUser,
+                  onPressed: _saveItem,
                   child: const Text('Save Changes'),
                 ),
               ],
