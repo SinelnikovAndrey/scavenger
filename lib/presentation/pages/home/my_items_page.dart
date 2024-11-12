@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:daily_scavenger/bloc/product/item_bloc.dart';
 import 'package:daily_scavenger/data/models/user/user_data.dart';
-import 'package:daily_scavenger/presentation/pages/item_page/item_page.dart';
+import 'package:daily_scavenger/presentation/pages/item_page/item_info.dart';
+// import 'package:daily_scavenger/presentation/pages/item_page/item_page.dart';
 import 'package:daily_scavenger/presentation/utils/app_colors.dart';
 import 'package:daily_scavenger/presentation/utils/app_fonts.dart';
 import 'package:daily_scavenger/presentation/utils/app_router.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+
+const String userBoxName = 'users';
 class MyItemsPage extends StatefulWidget {
   const MyItemsPage({super.key});
 
@@ -99,35 +102,52 @@ class _MyItemsPageState extends State<MyItemsPage> {
                 ],
               ),
               // const SizedBox(height: 200),
-              ValueListenableBuilder(
+              SizedBox(
+                height: 450,
+                child: ValueListenableBuilder(
         valueListenable: Hive.box<UserData>(userBoxName).listenable(),
         builder: (context, Box<UserData> box, widget) {
-           final userData = box.get('currentUser'); // Get the user data
+          final users = box.values.toList();
 
-          if (userData == null) {
+          if (users.isEmpty) {
             return const Center(child: Text('No user data found'));
           } else {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Display the user's profile image
-                  if (userData.photoUrl != null)
-                    Image.file(File(userData.photoUrl!), height: 200, width: double.infinity, fit: BoxFit.cover),
-
-                  // Display the user's information
-                  Text('Display Name: ${userData.displayName}'),
-                  const SizedBox(height: 16.0),
-                  Text('Email: ${userData.email}'),
-                  const SizedBox(height: 16.0),
-                  Text('Phone Number: ${userData.phoneNumber}'),
-                ],
-              ),
+            return ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                final userData = users[index];
+                return GestureDetector(
+                  onTap: () {
+                    // Navigate to the UserDetailPage when the card is tapped
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserDetailPage(userData: userData), // Pass userData
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: ListTile(
+                      title: Text('User ${userData.id}'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (userData.photoUrl != null)
+                            Image.file(File(userData.photoUrl!), height: 50, width: 50, fit: BoxFit.cover),
+                          Text('Display Name: ${userData.displayName}'),
+                          Text('Email: ${userData.email}'),
+                          Text('Phone Number: ${userData.phoneNumber}'),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
           }
         },
       ),
+              ),
             ],
           ),
         );

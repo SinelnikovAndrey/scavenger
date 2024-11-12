@@ -175,6 +175,7 @@ class UserDataAdapter extends TypeAdapter<UserData> {
 
   @override
   UserData read(BinaryReader reader) {
+    final id = reader.readInt();
     final displayName = reader.readString();
     final email = reader.readString();
     final phoneNumber = reader.readString();
@@ -182,6 +183,7 @@ class UserDataAdapter extends TypeAdapter<UserData> {
     
     // Handle empty string as null
     return UserData(
+      id: id, 
       displayName: displayName,
       email: email,
       phoneNumber: phoneNumber,

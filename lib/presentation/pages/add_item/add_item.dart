@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:daily_scavenger/data/models/user/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -40,6 +42,11 @@ class _UserFormPageState extends State<UserFormPage> {
     super.dispose();
   }
 
+   int _generateId() {
+    final random = Random();
+    return random.nextInt(1000000); // Adjust the range as needed
+  }
+
   Future<void> _selectImage() async {
     final pickedFile = await _imagePicker.pickImage(
       source: ImageSource.gallery, // or ImageSource.camera
@@ -64,17 +71,22 @@ class _UserFormPageState extends State<UserFormPage> {
     }
   }
 
+  
   Future<void> _saveUser() async {
     if (_formKey.currentState!.validate()) {
+      // Generate a unique ID
+      final id = _generateId();
+
       // Update the UserData object in Hive
       final box = await Hive.openBox<UserData>(userBoxName);
       final updatedUser = UserData(
+        id: id, // Assign the generated ID
         displayName: _nameController.text.trim(),
         email: _emailController.text.trim(),
         phoneNumber: _phoneController.text.trim(),
         photoUrl: _imageUrl, // Store the image path in Hive
       );
-      box.put('currentUser', updatedUser); 
+      await box.put(id.toString(), updatedUser); // Store by ID
 
       // Optionally, navigate back to the previous screen
       Navigator.pop(context);
