@@ -1,59 +1,55 @@
 import 'dart:io';
 
 
-import 'package:daily_scavenger/data/models/user/user_data.dart';
+import 'package:daily_scavenger/data/models/item/item_data.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 
 // Define a box name for Hive
-const String userBoxName = 'users';
+const String itemBoxName = 'items';
 
-class UserDisplayPage extends StatefulWidget {
-  const UserDisplayPage({Key? key}) : super(key: key);
+class ItemPage extends StatefulWidget {
+  const ItemPage({Key? key}) : super(key: key);
 
   @override
-  State<UserDisplayPage> createState() => _UserDisplayPageState();
+  State<ItemPage> createState() => _ItemPageState();
 }
 
-class _UserDisplayPageState extends State<UserDisplayPage> {
+class _ItemPageState extends State<ItemPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize Hive
-    // Hive.initFlutter();
-    // Hive.registerAdapter(UserDataAdapter());
+  
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User Data'),
+        title: const Text('Item Data'),
       ),
       body: ValueListenableBuilder(
-        valueListenable: Hive.box<UserData>(userBoxName).listenable(),
-        builder: (context, Box<UserData> box, widget) {
-           final userData = box.get('currentUser'); // Get the user data
+        valueListenable: Hive.box<ItemData>(itemBoxName).listenable(),
+        builder: (context, Box<ItemData> box, widget) {
+           final itemData = box.get('currentItem');
 
-          if (userData == null) {
-            return const Center(child: Text('No user data found'));
+          if (itemData == null) {
+            return const Center(child: Text('No item data found'));
           } else {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Display the user's profile image
-                  if (userData.photoUrl != null)
-                    Image.file(File(userData.photoUrl!), height: 200, width: double.infinity, fit: BoxFit.cover),
+                  if (itemData.photoUrl != null)
+                    Image.file(File(itemData.photoUrl!), height: 200, width: double.infinity, fit: BoxFit.cover),
 
-                  // Display the user's information
-                  Text('Display Name: ${userData.displayName}'),
+                  Text('Name: ${itemData.name}'),
                   const SizedBox(height: 16.0),
-                  Text('Email: ${userData.email}'),
+                  Text('Form: ${itemData.form}'),
                   const SizedBox(height: 16.0),
-                  Text('Phone Number: ${userData.phoneNumber}'),
+                  Text('Description: ${itemData.description}'),
                 ],
               ),
             );

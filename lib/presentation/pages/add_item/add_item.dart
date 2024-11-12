@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:daily_scavenger/data/models/user/user_data.dart';
+import 'package:daily_scavenger/data/models/item/item_data.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart'; // Import for File handling
 
 
 // Define a box name for Hive
-const String userBoxName = 'users';
+const String itemBoxName = 'items';
 
 class UserFormPage extends StatefulWidget {
   const UserFormPage({Key? key}) : super(key: key);
@@ -23,8 +23,8 @@ class UserFormPage extends StatefulWidget {
 class _UserFormPageState extends State<UserFormPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _formController = TextEditingController();
+  final _descriptionController = TextEditingController();
   final _imagePicker = ImagePicker();
   String? _imageUrl; 
 
@@ -37,8 +37,8 @@ class _UserFormPageState extends State<UserFormPage> {
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
+    _formController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -59,14 +59,14 @@ class _UserFormPageState extends State<UserFormPage> {
   }
 
   Future<void> _loadUserData() async {
-    final box = await Hive.openBox<UserData>(userBoxName);
-    final user = box.get('currentUser');
-    if (user != null) {
+    final box = await Hive.openBox<ItemData>(itemBoxName);
+    final item = box.get('currentUser');
+    if (item != null) {
       setState(() {
-        _nameController.text = user.displayName;
-        _emailController.text = user.email;
-        _phoneController.text = user.phoneNumber;
-        _imageUrl = user.photoUrl; // Load image path from Hive
+        _nameController.text = item.name;
+        _formController.text = item.form;
+        _descriptionController.text = item.description;
+        _imageUrl = item.photoUrl; // Load image path from Hive
       });
     }
   }
@@ -78,13 +78,15 @@ class _UserFormPageState extends State<UserFormPage> {
       final id = _generateId();
 
       // Update the UserData object in Hive
-      final box = await Hive.openBox<UserData>(userBoxName);
-      final updatedUser = UserData(
+      final box = await Hive.openBox<ItemData>(itemBoxName);
+      final updatedUser = ItemData(
         id: id, // Assign the generated ID
-        displayName: _nameController.text.trim(),
-        email: _emailController.text.trim(),
-        phoneNumber: _phoneController.text.trim(),
-        photoUrl: _imageUrl, // Store the image path in Hive
+        photoUrl: _imageUrl, 
+        name: _nameController.text.trim(), 
+        color: '', 
+        form: _formController.text.trim(),
+        group: '', 
+        description: _descriptionController.text.trim(), // Store the image path in Hive
       );
       await box.put(id.toString(), updatedUser); // Store by ID
 
@@ -129,7 +131,7 @@ class _UserFormPageState extends State<UserFormPage> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _emailController,
+                  controller: _formController,
                   decoration: const InputDecoration(labelText: 'Email'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -140,7 +142,7 @@ class _UserFormPageState extends State<UserFormPage> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _phoneController,
+                  controller: _descriptionController,
                   decoration: const InputDecoration(labelText: 'Phone Number'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

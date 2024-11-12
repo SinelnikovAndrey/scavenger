@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:daily_scavenger/bloc/product/item_bloc.dart';
-import 'package:daily_scavenger/data/models/user/user_data.dart';
-import 'package:daily_scavenger/presentation/pages/item_page/item_info.dart';
+import 'package:daily_scavenger/data/models/item/item_data.dart';
+import 'package:daily_scavenger/presentation/pages/item_page/item_detail.dart';
 // import 'package:daily_scavenger/presentation/pages/item_page/item_page.dart';
 import 'package:daily_scavenger/presentation/utils/app_colors.dart';
 import 'package:daily_scavenger/presentation/utils/app_fonts.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 
-const String userBoxName = 'users';
+const String itemBoxName = 'items';
 class MyItemsPage extends StatefulWidget {
   const MyItemsPage({super.key});
 
@@ -105,38 +105,37 @@ class _MyItemsPageState extends State<MyItemsPage> {
               SizedBox(
                 height: 450,
                 child: ValueListenableBuilder(
-        valueListenable: Hive.box<UserData>(userBoxName).listenable(),
-        builder: (context, Box<UserData> box, widget) {
-          final users = box.values.toList();
+        valueListenable: Hive.box<ItemData>(itemBoxName).listenable(),
+        builder: (context, Box<ItemData> box, widget) {
+          final items = box.values.toList();
 
-          if (users.isEmpty) {
-            return const Center(child: Text('No user data found'));
+          if (items.isEmpty) {
+            return const Center(child: Text('Your items will be here'));
           } else {
             return ListView.builder(
-              itemCount: users.length,
+              itemCount: items.length,
               itemBuilder: (context, index) {
-                final userData = users[index];
+                final itemData = items[index];
                 return GestureDetector(
                   onTap: () {
-                    // Navigate to the UserDetailPage when the card is tapped
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => UserDetailPage(userData: userData), // Pass userData
+                        builder: (context) => ItemDetailPage(itemData: itemData), 
                       ),
                     );
                   },
                   child: Card(
                     child: ListTile(
-                      title: Text('User ${userData.id}'),
+                      // title: Text('Item ${itemData.id}'),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (userData.photoUrl != null)
-                            Image.file(File(userData.photoUrl!), height: 50, width: 50, fit: BoxFit.cover),
-                          Text('Display Name: ${userData.displayName}'),
-                          Text('Email: ${userData.email}'),
-                          Text('Phone Number: ${userData.phoneNumber}'),
+                          if (itemData.photoUrl != null)
+                            Image.file(File(itemData.photoUrl!), height: 50, width: 50, fit: BoxFit.cover),
+                          Text('Name: ${itemData.name}'),
+                          Text('Form: ${itemData.form}'),
+                          Text('Description: ${itemData.description}'),
                         ],
                       ),
                     ),

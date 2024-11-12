@@ -1,4 +1,3 @@
-import 'package:daily_scavenger/presentation/pages/history_item/history_item.dart';
 import 'package:daily_scavenger/presentation/pages/add_item/add_item.dart';
 import 'package:flutter/material.dart';
 

@@ -1,4 +1,5 @@
 import 'package:daily_scavenger/data/models/history/history_data.dart';
+import 'package:daily_scavenger/data/models/item/item_data.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -9,7 +10,7 @@ import 'dart:math';
 
 
 // Define a box name for Hive
-const String userBoxName = 'users';
+const String itemBoxName = 'items';
 const String placeBoxName = 'places';
 
 // Generate a random ID for places
@@ -20,36 +21,46 @@ int _generateId() {
 
 
 // Page for adding place data
+// Page for adding place data
 class AddPlacePage extends StatefulWidget {
-  final int userId; // User ID for associating with place data
+  final int itemId; 
 
-  const AddPlacePage({Key? key, required this.userId}) : super(key: key);
+  const AddPlacePage({Key? key, required this.itemId}) : super(key: key);
 
   @override
   State<AddPlacePage> createState() => _AddPlacePageState();
 }
 
 class _AddPlacePageState extends State<AddPlacePage> {
-  final _formKey = GlobalKey<FormState>();
-  final _placeNameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // Remains final
+  final _placeNameController = TextEditingController(); // Remains final
+  late Box<ItemData> itemBox;
+
+  @override
+  void initState() {
+    super.initState();
+    itemBox = Hive.box<ItemData>(itemBoxName); 
+  }
+
+  @override
+  void dispose() {
+    _placeNameController.dispose();
+    super.dispose();
+  }
 
   Future<void> _savePlace() async {
-    if (_formKey.currentState!.validate()) {
-      final placeId = _generateId(); // Generate a unique ID for the place
+    if (_formKey.currentState!.validate()) { // Accessing _formKey correctly
+      final placeId = _generateId(); 
       final placeData = PlaceData(
         id: placeId,
         placeName: _placeNameController.text.trim(),
         saveDateTime: DateTime.now(),
+        photoUrl: itemBox.get(widget.itemId.toString())?.photoUrl, 
       );
 
       final placeBox = await Hive.openBox<PlaceData>(placeBoxName);
       await placeBox.put(placeId.toString(), placeData);
 
-      // Optionally, you can associate this place data with a user in the Hive database.
-      // For example, you could create a list of place IDs in the user's data.
-      // ...
-
-      // Navigate back to the previous screen
       Navigator.pop(context);
     }
   }
@@ -63,12 +74,12 @@ class _AddPlacePageState extends State<AddPlacePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: _formKey, // Using _formKey correctly
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                controller: _placeNameController,
+                controller: _placeNameController, // Using _placeNameController correctly
                 decoration: const InputDecoration(labelText: 'Place Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -90,23 +101,3 @@ class _AddPlacePageState extends State<AddPlacePage> {
   }
 }
 
-// ... your UserDataAdapter and PlaceDataAdapter classes (same as before) ...
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Hive.initFlutter();
-//   Hive.registerAdapter(UserDataAdapter());
-//   Hive.registerAdapter(PlaceDataAdapter());
-//   runApp(const MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: const UserDisplayPage(),
-//     );
-//   }
-// }

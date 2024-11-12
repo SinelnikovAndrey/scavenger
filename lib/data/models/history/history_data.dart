@@ -1,11 +1,13 @@
 class PlaceData {
-  int id; // Unique ID for the place data
+  int id; 
   String placeName;
-  DateTime saveDateTime; // Date and time of saving
+  DateTime saveDateTime; 
+  String? photoUrl; // Store the image path from UserData
 
   PlaceData({
     required this.id,
     required this.placeName,
     required this.saveDateTime,
+    this.photoUrl, 
   });
 }

@@ -1,28 +1,27 @@
-// Page for editing user data
 import 'dart:io';
 
-import 'package:daily_scavenger/data/models/user/user_data.dart';
+import 'package:daily_scavenger/data/models/item/item_data.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
-const String userBoxName = 'users';
+const String itemBoxName = 'items';
 
 
-class UserEditPage extends StatefulWidget {
-  final UserData userData;
+class EditItemPage extends StatefulWidget {
+  final ItemData itemData;
 
-  const UserEditPage({Key? key, required this.userData}) : super(key: key);
+  const EditItemPage({Key? key, required this.itemData}) : super(key: key);
 
   @override
-  State<UserEditPage> createState() => _UserEditPageState();
+  State<EditItemPage> createState() => _EditItemPageState();
 }
 
-class _UserEditPageState extends State<UserEditPage> {
+class _EditItemPageState extends State<EditItemPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _formController = TextEditingController();
+  final _descriptionController = TextEditingController();
   final _imagePicker = ImagePicker();
   File? _image;
   String? _imageUrl; 
@@ -30,10 +29,10 @@ class _UserEditPageState extends State<UserEditPage> {
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.userData.displayName;
-    _emailController.text = widget.userData.email;
-    _phoneController.text = widget.userData.phoneNumber;
-    _imageUrl = widget.userData.photoUrl;
+    _nameController.text = widget.itemData.name;
+    _formController.text = widget.itemData.form;
+    _descriptionController.text = widget.itemData.description;
+    _imageUrl = widget.itemData.photoUrl;
   }
 
   Future<void> _selectImage() async {
@@ -50,17 +49,19 @@ class _UserEditPageState extends State<UserEditPage> {
 
   Future<void> _saveChanges() async {
     if (_formKey.currentState!.validate()) {
-      final box = await Hive.openBox<UserData>(userBoxName);
+      final box = await Hive.openBox<ItemData>(itemBoxName);
 
-      // Update the UserData object in Hive
-      final updatedUser = UserData(
-        id: widget.userData.id, 
-        displayName: _nameController.text.trim(),
-        email: _emailController.text.trim(),
-        phoneNumber: _phoneController.text.trim(),
-        photoUrl: _imageUrl,
+      // Update the ItemData object in Hive
+      final updatedItem = ItemData(
+        id: widget.itemData.id, 
+        name: _nameController.text.trim(),
+        form: _formController.text.trim(),
+        description: _descriptionController.text.trim(),
+        photoUrl: _imageUrl, 
+        color: '', 
+        group: '',
       );
-      await box.put(widget.userData.id.toString(), updatedUser);
+      await box.put(widget.itemData.id.toString(), updatedItem);
 
       // Navigate back to the previous screen
       Navigator.pop(context);
@@ -71,7 +72,7 @@ class _UserEditPageState extends State<UserEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit User'),
+        title: const Text('Edit Item'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -90,35 +91,35 @@ class _UserEditPageState extends State<UserEditPage> {
                   child: const Text('Choose Image'),
                 ),
                 const SizedBox(height: 16.0),
-                // Text Fields for User Information
+                // Text Fields for Item Information
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Display Name'),
+                  decoration: const InputDecoration(labelText: 'Name'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a display name';
+                      return 'Please enter a name';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  controller: _formController,
+                  decoration: const InputDecoration(labelText: 'Form'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter an email';
+                      return 'Please enter a form';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(labelText: 'Phone Number'),
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(labelText: 'Description'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a phone number';
+                      return 'Please enter a description';
                     }
                     return null;
                   },
