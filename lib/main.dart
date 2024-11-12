@@ -1,6 +1,7 @@
 
 
 import 'package:daily_scavenger/bloc/product/item_bloc.dart';
+import 'package:daily_scavenger/data/models/history/history_data.dart';
 import 'package:daily_scavenger/data/models/user/user_data.dart';
 import 'package:daily_scavenger/data/services/hive_adapters.dart';
 import 'package:daily_scavenger/my_app.dart';
@@ -13,12 +14,14 @@ Future<void> main() async {
  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox<UserData>('users');
+  await Hive.openBox<PlaceData>('places');
   // await Hive.openBox('myBox');
   // registerAdapters();
   // Hive.registerAdapter(ImageDataAdapter()); 
   // await Hive.initFlutter();
   
   Hive.registerAdapter(UserDataAdapter());
+  Hive.registerAdapter(PlaceDataAdapter());
   // await Hive.openBox('myBox');
   // await Hive.openBox('categoryBox');
   // await Hive.openBox('images');

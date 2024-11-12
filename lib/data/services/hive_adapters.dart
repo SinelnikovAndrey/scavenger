@@ -2,6 +2,7 @@
 
 // register adapters
 import 'package:daily_scavenger/data/models/category.dart';
+import 'package:daily_scavenger/data/models/history/history_data.dart';
 import 'package:daily_scavenger/data/models/item/item_data.dart';
 import 'package:daily_scavenger/data/models/order_product.dart';
 import 'package:daily_scavenger/data/models/product.dart';
@@ -197,5 +198,29 @@ class UserDataAdapter extends TypeAdapter<UserData> {
     writer.writeString(obj.email);
     writer.writeString(obj.phoneNumber);
     writer.writeString(obj.photoUrl ?? ''); // Write an empty string if photoUrl is null
+  }
+}
+class PlaceDataAdapter extends TypeAdapter<PlaceData> {
+  @override
+  final int typeId = 2; 
+
+  @override
+  PlaceData read(BinaryReader reader) {
+    final id = reader.readInt();
+    final placeName = reader.readString();
+    final saveDateTime = reader.read().asDateTime(); // Correctly read DateTime
+
+    return PlaceData(
+      id: id,
+      placeName: placeName,
+      saveDateTime: saveDateTime,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, PlaceData obj) {
+    writer.writeInt(obj.id);
+    writer.writeString(obj.placeName);
+    writer.write(obj.saveDateTime); // Correctly write DateTime
   }
 }

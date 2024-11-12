@@ -1,105 +1,58 @@
 import 'package:daily_scavenger/data/models/user/user_data.dart';
-import 'package:daily_scavenger/data/services/hive_adapters.dart';
+import 'package:daily_scavenger/presentation/pages/history_item/history_item.dart';
+import 'package:daily_scavenger/presentation/pages/item_page/edit_item.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:io'; 
 
 // ... your UserData class definition ...
 
 const String userBoxName = 'users';
-
-class UserDisplayPage extends StatefulWidget {
-  const UserDisplayPage({Key? key}) : super(key: key);
-
-  @override
-  State<UserDisplayPage> createState() => _UserDisplayPageState();
-}
-
-class _UserDisplayPageState extends State<UserDisplayPage> {
-  late Box<UserData> usersBox; 
-
-  @override
-  void initState() {
-    super.initState();
-    Hive.initFlutter();
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(UserDataAdapter());
-    }
-    usersBox = Hive.box<UserData>('users');
-  }
-
-  @override
-  void dispose() {
-    usersBox.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Data'),
-      ),
-      body: ValueListenableBuilder(
-        valueListenable: Hive.box<UserData>(userBoxName).listenable(),
-        builder: (context, Box<UserData> box, widget) {
-          final users = box.values.toList();
-
-          if (users.isEmpty) {
-            return const Center(child: Text('No user data found'));
-          } else {
-            return ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final userData = users[index];
-                return GestureDetector(
-                  onTap: () {
-                    // Navigate to the UserDetailPage when the card is tapped
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserDetailPage(userData: userData), // Pass userData
-                      ),
-                    );
-                  },
-                  child: Card(
-                    child: ListTile(
-                      title: Text('User ${userData.id}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (userData.photoUrl != null)
-                            Image.file(File(userData.photoUrl!), height: 50, width: 50, fit: BoxFit.cover),
-                          Text('Display Name: ${userData.displayName}'),
-                          Text('Email: ${userData.email}'),
-                          Text('Phone Number: ${userData.phoneNumber}'),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        },
-      ),
-    );
-  }
-}
-
 // Page for displaying details of a specific user
 class UserDetailPage extends StatelessWidget {
   final UserData userData;
+  // final UserData userId;
 
-  const UserDetailPage({Key? key, required this.userData}) : super(key: key);
+  const UserDetailPage({Key? key, required this.userData, }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('User ${userData.id}'), // Display the user ID in the title
+        
+        actions: [
+          ElevatedButton(
+          onPressed: () {
+            // Navigate to UserEditPage when the button is pressed
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserEditPage(userData: userData),
+              ),
+            );
+          },
+          child: const Text('Edit User'),
+        ),
+        ],
+        
       ),
+      // bottomNavigationBar: Padding(
+      //       padding: const EdgeInsets.symmetric(
+      //         horizontal: 25,
+      //         vertical: 30,
+      //       ),
+      //       child: DefaultButton(
+      //         text: 'Add new item',
+      //         onTap: () {
+      //               Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => AddPlacePage(userId: userId,),
+      //         ),
+      //       );
+      //             },
+      //       ),
+      //     ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -113,7 +66,24 @@ class UserDetailPage extends StatelessWidget {
             Text('Email: ${userData.email}'),
             const SizedBox(height: 16.0),
             Text('Phone Number: ${userData.phoneNumber}'),
+
+            Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                // Navigate to AddPlacePage, passing the userId
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddPlacePage(userId: userData.id),
+                  ),
+                );
+              },
+              child: const Text('Add Place'),
+            ),
+          ),
           ],
+
         ),
       ),
     );

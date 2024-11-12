@@ -1,5 +1,6 @@
 import 'package:daily_scavenger/bloc/product/item_bloc.dart';
 import 'package:daily_scavenger/data/repositories/item_repository.dart';
+import 'package:daily_scavenger/presentation/pages/history_item/history_page.dart';
 import 'package:daily_scavenger/presentation/pages/home/my_items_page.dart';
 import 'package:daily_scavenger/presentation/utils/app_colors.dart';
 import 'package:daily_scavenger/presentation/utils/assets.dart';
@@ -131,7 +132,7 @@ class _HomePageState extends State<HomePage> {
         index: selectedIndex,
         children: const [
          MyItemsPage(),
-          MyItemsPage(),
+          HistoryPage(),
           MyItemsPage(),
           MyItemsPage(),
           MyItemsPage(),

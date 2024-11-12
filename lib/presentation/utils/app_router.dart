@@ -1,3 +1,4 @@
+import 'package:daily_scavenger/presentation/pages/history_item/history_item.dart';
 import 'package:daily_scavenger/presentation/pages/add_item/add_item.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class AppRouter {
   static const String cartRoute = '/cart';
   static const String exploreRoute = '/explore';
   static const String favoritesRoute = '/favorite';
+  static const String addPlaceRoute = '/addPlaceRoute';
   static const String forgotPasswordRoute = '/forgot-password';
   static const String helpRoute = '/help';
   static const String homeRoute = '/home';
@@ -56,10 +58,10 @@ class AppRouter {
       //   return MaterialPageRoute<dynamic>(
       //     builder: (_) => const ExplorePage(),
       //   );
-      // case favoritesRoute:
+      // case addPlaceRoute:
       //   return MaterialPageRoute<dynamic>(
-      //     builder: (_) => const FavoritesPage(),
-      //   );
+      //     builder: (_) => const AddPlacePage(userId: null,),
+        // );
       // case forgotPasswordRoute:
       //   return MaterialPageRoute<dynamic>(
       //     builder: (_) => const ForgotPasswordPage(),
