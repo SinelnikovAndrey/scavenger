@@ -1,6 +1,3 @@
-
-
-// register adapters
 import 'package:daily_scavenger/data/models/category.dart';
 import 'package:daily_scavenger/data/models/history/history_data.dart';
 import 'package:daily_scavenger/data/models/item/item_data.dart';
@@ -9,11 +6,8 @@ import 'package:daily_scavenger/data/models/product.dart';
 import 'package:hive/hive.dart';
 
 void registerAdapters() {
-  // Hive.registerAdapter(AddressAdapter());
-  // Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(CategoryAdapter());
   Hive.registerAdapter(ProductAdapter());
-  // Hive.registerAdapter(UserDataAdapter());
   Hive.registerAdapter(ItemDataAdapter()); 
 }
 
@@ -31,7 +25,6 @@ class ItemDataAdapter extends TypeAdapter<ItemData> {
     final description = reader.readString();
     final photoUrl = reader.readString();
     
-    // Handle empty string as null
     return ItemData(
       id: id, 
       name: name,
