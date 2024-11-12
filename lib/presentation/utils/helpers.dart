@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 
-// import 'package:nectar/src/data/models/user.dart';
 
 // email regex
 bool isValidEmail(String email) {

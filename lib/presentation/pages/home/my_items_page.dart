@@ -1,9 +1,7 @@
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
 
 import 'package:daily_scavenger/bloc/product/item_bloc.dart';
 import 'package:daily_scavenger/data/models/user/user_data.dart';
-import 'package:daily_scavenger/data/services/image_service.dart';
 import 'package:daily_scavenger/presentation/pages/item_page/item_page.dart';
 import 'package:daily_scavenger/presentation/utils/app_colors.dart';
 import 'package:daily_scavenger/presentation/utils/app_fonts.dart';
@@ -11,21 +9,8 @@ import 'package:daily_scavenger/presentation/utils/app_router.dart';
 import 'package:daily_scavenger/widgets/buttons/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 
-// import 'package:nectar/src/bloc/product/product_bloc.dart';
-
-// import 'package:nectar/src/data/models/order_product.dart';
-// import 'package:nectar/src/data/repositories/product_repository.dart';
-// import 'package:nectar/src/presentation/utils/app_colors.dart';
-// import 'package:nectar/src/presentation/utils/helpers.dart';
-// import 'package:nectar/src/presentation/widgets/buttons/default_button.dart';
-// import 'package:nectar/src/presentation/widgets/buttons/round_button.dart';
-
-// class CartPage extends StatelessWidget {
-//   const CartPage({super.key});
 class MyItemsPage extends StatefulWidget {
   const MyItemsPage({super.key});
 
@@ -37,36 +22,14 @@ class _MyItemsPageState extends State<MyItemsPage> {
   bool ignoring = false;
   final List<String> _dropdownValues = ["One", "Two", "Three", "Four", "Five"];
 
-  final _imageService = ImageService();
-  final ImagePicker _picker = ImagePicker();
-  XFile? _selectedImage;
-  List<String> _imagePaths = []; // To store retrieved image paths
 
-  Future<void> _getImageFromSource(ImageSource source) async {
-    final XFile? pickedImage = await _picker.pickImage(source: source);
-    setState(() {
-      _selectedImage = pickedImage;
-    });
-
-    if (_selectedImage != null) {
-      // Save the image path
-      await _imageService.saveImagePath(_selectedImage!.path);
-      setState(() {});
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    _fetchImages(); // Call the function to retrieve images when the screen loads
   }
 
-  Future<void> _fetchImages() async {
-    final imagePaths = await _imageService.getAllImagePaths();
-    setState(() {
-      _imagePaths = imagePaths;
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
