@@ -1,0 +1,9 @@
+flutter_native_splash:
+  ios: true
+  android: true
+  web: false
+
+  color: "#6CB1FF"
+  image: "assets/png/daily-scavenger 1 copy.png"
+
+
