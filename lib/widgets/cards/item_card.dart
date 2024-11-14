@@ -14,9 +14,6 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ItemRepo orderProduct = ItemRepo(
-    //   item: item,
-    // );
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -51,7 +48,7 @@ class ItemCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.file(File(item.photoUrl!),
-                        height: 120, width: 120, fit: BoxFit.cover),
+                        height: 146, width: 146, fit: BoxFit.cover),
                   )
                 else
                   const Icon(

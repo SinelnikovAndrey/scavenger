@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:daily_scavenger/bloc/my_items_page_bloc/my_items_bloc.dart';
 import 'package:daily_scavenger/data/models/item/item_data.dart';
+import 'package:daily_scavenger/presentation/pages/item_page/edit_item.dart';
+import 'package:daily_scavenger/presentation/utils/app_fonts.dart';
+import 'package:daily_scavenger/widgets/buttons/round_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class ItemDetailPage extends StatelessWidget {
   final ItemData id; // Now itemId is a String
@@ -15,36 +17,55 @@ class ItemDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Item Detail'),
+        title: Text(
+          id.name,
+          style: AppFonts.h10,
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: RoundButton(
+              icon: Icons.edit,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditItemPage(itemData: id),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       body: BlocBuilder<MyItemsBloc, MyItemsState>(
         builder: (context, state) {
           if (state is MyItemsLoaded) {
-            // final itemData = state.items.firstWhere(
-            //   (item) => item.id == id, // Comparison is now with == for String
-            //   orElse: () => ItemData(id: '-1', name: 'Item not found', color: '', form: ''), // Handle case where item is not found
-            // );
-
             return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (id.photoUrl != null)
-              Image.file(File(id.photoUrl!),
-                  height: 120, width: 120, fit: BoxFit.cover),
-                    const SizedBox(height: 16.0),
-                    Text('Name: ${id.name}'),
-                    const SizedBox(height: 16.0),
-                    Text('Form: ${id.form}'),
-                    const SizedBox(height: 16.0),
-                    Text('Group: ${id.group}'),
-                    const SizedBox(height: 16.0),
-                    Text('Description Number: ${id.description}'),
-                    
-                  ],
-                ),
-              );
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (id.photoUrl != null)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.file(File(id.photoUrl!),
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          fit: BoxFit.cover),
+                    ),
+                  const SizedBox(height: 16.0),
+                  Text('Name: ${id.name}'),
+                  const SizedBox(height: 16.0),
+                  Text('Form: ${id.form}'),
+                  const SizedBox(height: 16.0),
+                  Text('Group: ${id.group}'),
+                  const SizedBox(height: 16.0),
+                  Text('Description Number: ${id.description}'),
+                ],
+              ),
+            );
           } else if (state is MyItemsLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is MyItemsFailure) {

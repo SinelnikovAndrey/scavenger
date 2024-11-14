@@ -12,18 +12,18 @@ class RoundButton extends StatelessWidget {
     super.key,
     required this.icon,
     required this.onTap,
-    this.backgroundColor = AppColors.primary,
-    this.iconColor = Colors.white,
-    this.borderColor = Colors.transparent,
+    this.backgroundColor = Colors.transparent,
+    this.iconColor = Colors.black,
+    this.borderColor = AppColors.gray,
   });
 
   @override
   Widget build(BuildContext context) {
     return Ink(
-      width: 45,
-      height: 45,
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(17),
+        borderRadius: BorderRadius.circular(100),
         color: backgroundColor,
         border: Border.all(
           color: borderColor!,
@@ -31,7 +31,7 @@ class RoundButton extends StatelessWidget {
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(17),
+        borderRadius: BorderRadius.circular(100),
         child: Icon(
           icon,
           color: iconColor,

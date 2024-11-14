@@ -19,7 +19,9 @@ static const h6 = TextStyle(
       fontFamily: 'Inter',
       fontSize: 36,
       fontWeight: FontWeight.w500,
-      height: 1.5);
+      height: 1.5
+      )
+      ;
 
   // static const h6Blue = TextStyle(
   //     color: linColor,

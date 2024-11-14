@@ -331,7 +331,6 @@ class _AddItemPageState extends State<AddItemPage> {
   @override
   void initState() {
     super.initState();
-    _loadUserData();
   }
 
   @override
@@ -360,19 +359,6 @@ class _AddItemPageState extends State<AddItemPage> {
     }
   }
 
-  Future<void> _loadUserData() async {
-    final box = await Hive.openBox<ItemData>(itemBoxName);
-    final item = box.get('currentUser');
-    if (item != null) {
-      setState(() {
-        _nameController.text = item.name;
-        _formController.text = item.form!;
-        _groupController.text = item.group!;
-        _descriptionController.text = item.description!;
-        _imageUrl = item.photoUrl; // Load image path from Hive
-      });
-    }
-  }
 
   
   Future<void> _saveUser() async {

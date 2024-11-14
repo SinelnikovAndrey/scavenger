@@ -216,10 +216,12 @@ class _MyItemsPageState extends State<MyItemsPage> {
         automaticallyImplyLeading: false,
         centerTitle: true,
       ),
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: 
+      
+      Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 25,
-          vertical: 30,
+          horizontal: 5,
+          vertical: 5,
         ),
         child: ElevatedButton(
           onPressed: () {
