@@ -18,54 +18,59 @@ class ItemCard extends StatelessWidget {
     //   item: item,
     // );
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(10),
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          AppRouter.itemDetailRoute,
-          arguments: item,
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.only(
-          top: 20,
-          left: 15,
-          right: 15,
-          bottom: 15,
-        ),
-        width: 170,
-        height: 250,
-        decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SizedBox(
+           height: MediaQuery.of(context).size.height * 0.2,
+               width: MediaQuery.of(context).size.width * 0.9,
+        child: InkWell(
+          
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: AppColors.lightBorderGray,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // image or icon
-            if (item.photoUrl != null)
-              Image.file(File(item.photoUrl!),
-                  height: 120, width: 120, fit: BoxFit.cover)
-            else
-              const Icon(
-                Icons.inventory,
-                size: 100,
-                color: AppColors.primary,
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              AppRouter.itemDetailRoute,
+              arguments: item,
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(10),
+           
+                
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: AppColors.lightBorderGray,
               ),
-            const SizedBox(height: 20),
-            // title
-            Text(
-              item.name,
-              maxLines: 1,
-              style: Theme.of(context).textTheme.bodyLarge,
             ),
-            // unit
-
-            const Spacer(),
-          ],
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // image or icon
+                if (item.photoUrl != null)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(File(item.photoUrl!),
+                        height: 120, width: 120, fit: BoxFit.cover),
+                  )
+                else
+                  const Icon(
+                    Icons.inventory,
+                    size: 100,
+                    color: AppColors.primary,
+                  ),
+                const SizedBox(width: 25),
+                // title
+                Text(
+                  item.name,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                // unit
+                
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -1,7 +1,6 @@
-
 // ////------------------CODE--OPEN--CODE--OPEN--CODE--OPEN-CODE--OPEN-CODE--OPEN_______________________/////
 // ////---------------------WORK CODE--WORK CODE--WORK CODE--WORK CODE--WORK CODE_______________________/////
-                                     ///>>>>>>>>>>>>><<<<<<<<<<<<<<<///
+///>>>>>>>>>>>>><<<<<<<<<<<<<<<///
 
 // import 'dart:io';
 // import 'package:daily_scavenger/bloc/product/item_bloc.dart';
@@ -18,7 +17,6 @@
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:hive_flutter/hive_flutter.dart';
 
-
 // // const String itemsBoxName = 'items';
 // class MyItemsPage extends StatefulWidget {
 //   const MyItemsPage({super.key});
@@ -31,14 +29,10 @@
 //   bool ignoring = false;
 //   final List<String> _dropdownValues = ["One", "Two", "Three", "Four", "Five"];
 
-
-
 //   @override
 //   void initState() {
 //     super.initState();
 //   }
-
-
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -77,7 +71,7 @@
 //                       icon: const Icon(Icons.add),
 //                       color: Colors.white,
 //                       onPressed: () {
-                       
+
 //                       },
 //                     ),
 //                   ),
@@ -126,7 +120,7 @@
 //                     Navigator.push(
 //                       context,
 //                       MaterialPageRoute(
-//                         builder: (context) => ItemDetailPage(itemData: itemData), 
+//                         builder: (context) => ItemDetailPage(itemData: itemData),
 //                       ),
 //                     );
 //                   },
@@ -155,27 +149,24 @@
 //             ],
 //           ),
 //         );
-    
+
 //   }
 // }
-                                     ///>>>>>>>>>>>>><<<<<<<<<<<<<<<///
+///>>>>>>>>>>>>><<<<<<<<<<<<<<<///
 
 // ////---------------------WORK CODE--WORK CODE--WORK CODE--WORK CODE--WORK CODE_________________________/////
 
 // ////------------------CODE--CLOSE--CODE--CLOSE--CODE--CLOSE--CODE--CLOSE--CODE--CLOSE__________________/////
 
-
-
-
-
-////----------------BLOC--BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC--_______________________/////   
+////----------------BLOC--BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC--_______________________/////
 ////------------------CODE--OPEN--CODE--OPEN--CODE--OPEN-CODE--OPEN-CODE--OPEN__________________________/////
 ////---------------------WORK CODE--WORK CODE--WORK CODE--WORK CODE--WORK CODE_________________________//////
-                                //////>>>>>>>>>>>>><<<<<<<<<<<<<<<///
+//////>>>>>>>>>>>>><<<<<<<<<<<<<<<///
 
 import 'package:daily_scavenger/bloc/my_items_page_bloc/my_items_bloc.dart';
+import 'package:daily_scavenger/presentation/utils/app_colors.dart';
+import 'package:daily_scavenger/presentation/utils/app_fonts.dart';
 import 'package:daily_scavenger/widgets/cards/item_card.dart';
-import 'package:daily_scavenger/widgets/cards/item_detail_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -194,7 +185,6 @@ class _MyItemsPageState extends State<MyItemsPage> {
   void initState() {
     super.initState();
     context.read<MyItemsBloc>().add(MyItemsLoadEvent());
-
   }
 
   @override
@@ -225,73 +215,101 @@ class _MyItemsPageState extends State<MyItemsPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
-        
       ),
       bottomNavigationBar: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 25,
-              vertical: 30,
-            ),
-            child: ElevatedButton(
-              onPressed: () {
-                // Pass the context to the event
-                context
-                    .read<MyItemsBloc>()
-                    .add(MyItemsNavigateToAddItemEvent(context));
-              },
-              child: const Text('Add new item'),
-            ),
-          ),
-      body: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 25,
+          vertical: 30,
+        ),
+        child: ElevatedButton(
+          onPressed: () {
+            // Pass the context to the event
+            context
+                .read<MyItemsBloc>()
+                .add(MyItemsNavigateToAddItemEvent(context));
+          },
+          child: const Text('Add new item'),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // best selling
-              if (state.items.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text(
+                    'My items',
+                    style: AppFonts.h10,
+                  ),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: const Color(0xFF6CB1FF),
+                    child: IconButton(
+                      icon: const Icon(Icons.add),
+                      color: Colors.white,
+                      onPressed: () {},
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    width: 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      border: Border.all(
+                          color: AppColors.gray,
+                          style: BorderStyle.solid,
+                          width: 1),
+                    ),
+                    child: DropdownButton(
+                      borderRadius: BorderRadius.circular(15),
+                      items: _dropdownValues
+                          .map((value) => DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              ))
+                          .toList(),
+                      onChanged: (value) {},
+                      isExpanded: false,
+                      value: _dropdownValues.first,
+                    ),
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
-                      const Text(
-                        'Best Selling',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                      // best selling
+                      if (state.items.isNotEmpty) ...[
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            // padding: const EdgeInsets.symmetric(horizontal: 25),
+                            itemCount: state.items.length,
+                            itemBuilder: (context, index) {
+                              return Row(
+                                
+                                children: [
+                                  Flexible(
+                                    child: ItemCard(
+                                      item: state.items[index],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('See All'),
-                      ),
+                      ],
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 250,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    itemCount: state.items.length,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: [
-                          ItemCard(
-                            item: state.items[index],
-                          ),
-                          // if not last item
-                          if (index != state.items.length - 1)
-                            const Text('No Items'),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 30),
-              ],
-             
+              ),
             ],
           ),
         ),
@@ -300,15 +318,13 @@ class _MyItemsPageState extends State<MyItemsPage> {
   }
 }
 
-                                  ///>>>>>>>>>>>>><<<<<<<<<<<<<<<///
+///>>>>>>>>>>>>><<<<<<<<<<<<<<<///
 
-////----------------BLOC--BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC--_______________________/////   
+////----------------BLOC--BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC-- BLOC--_______________________/////
 
-  // ////---------------------WORK CODE--WORK CODE--WORK CODE--WORK CODE--WORK CODE_________________________/////
+// ////---------------------WORK CODE--WORK CODE--WORK CODE--WORK CODE--WORK CODE_________________________/////
 
 // ////------------------CODE--CLOSE--CODE--CLOSE--CODE--CLOSE--CODE--CLOSE--CODE--CLOSE__________________/////
-
-
 
 //     return BlocProvider(
 //         create: (context) =>
@@ -436,5 +452,3 @@ class _MyItemsPageState extends State<MyItemsPage> {
 //           ),
 //         ));
 //   }
-
-
