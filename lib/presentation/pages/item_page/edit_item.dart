@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:daily_scavenger/data/models/item/item_data.dart';
+import 'package:daily_scavenger/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
-const String itemBoxName = 'items';
 
 
 class EditItemPage extends StatefulWidget {
@@ -22,16 +22,20 @@ class _EditItemPageState extends State<EditItemPage> {
   final _nameController = TextEditingController();
   final _formController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _groupController = TextEditingController();
   final _imagePicker = ImagePicker();
   File? _image;
-  String? _imageUrl; 
+  String? _imageUrl;
+  
+
 
   @override
   void initState() {
     super.initState();
     _nameController.text = widget.itemData.name;
     _formController.text = widget.itemData.form;
-    _descriptionController.text = widget.itemData.description;
+    // _descriptionController.text = widget.itemData.description;
+    // _groupController.text = widget.itemData.group;
     _imageUrl = widget.itemData.photoUrl;
   }
 
@@ -58,8 +62,9 @@ class _EditItemPageState extends State<EditItemPage> {
         form: _formController.text.trim(),
         description: _descriptionController.text.trim(),
         photoUrl: _imageUrl, 
-        color: '', 
-        group: '',
+        group: _groupController.text.trim(),
+        color: '',
+        
       );
       await box.put(widget.itemData.id.toString(), updatedItem);
 
@@ -109,6 +114,17 @@ class _EditItemPageState extends State<EditItemPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a form';
+                    }
+                    return null;
+                  },
+                ),
+                 const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _groupController,
+                  decoration: const InputDecoration(labelText: 'Group'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a group';
                     }
                     return null;
                   },

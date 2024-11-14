@@ -1,36 +1,32 @@
+import 'dart:io';
+
 import 'package:daily_scavenger/data/models/history/history_data.dart';
-import 'package:daily_scavenger/data/models/item/item_data.dart';
+import 'package:daily_scavenger/main.dart';
 import 'package:daily_scavenger/presentation/pages/history_item/history_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart'; 
-import 'dart:io'; 
 
-const String itemBoxName = 'items';
-const String placeBoxName = 'places';
+
 class HistoryPage extends StatefulWidget {
-
-  const HistoryPage({Key? key, }) : super(key: key);
+  const HistoryPage({Key? key}) : super(key: key);
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  late Box<PlaceData> placeBox;
-  late Box<ItemData> itemBox; 
+  late Box<HistoryData> placeBox;
 
   @override
   void initState() {
     super.initState();
-    placeBox = Hive.box<PlaceData>(placeBoxName);
-    itemBox = Hive.box<ItemData>(itemBoxName);
+    placeBox = Hive.box<HistoryData>(placeBoxName);
   }
 
   @override
   void dispose() {
     placeBox.close();
-    itemBox.close();
     super.dispose();
   }
 
@@ -42,7 +38,7 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
       body: ValueListenableBuilder(
         valueListenable: placeBox.listenable(),
-        builder: (context, Box<PlaceData> box, widget) {
+        builder: (context, Box<HistoryData> box, widget) {
           final places = box.values.toList();
 
           if (places.isEmpty) {
@@ -52,26 +48,59 @@ class _HistoryPageState extends State<HistoryPage> {
               itemCount: places.length,
               itemBuilder: (context, index) {
                 final placeData = places[index];
-                final formattedDateTime = DateFormat('dd/MM/yyyy HH:mm').format(placeData.saveDateTime);
+                final formattedDateTime = DateFormat('dd/MM/yyyy HH:mm').format(placeData.saveDateTime); // Format date and time
 
                 return GestureDetector( // Add GestureDetector to each card
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HistoryDetailPage(placeData: placeData),
+                        builder: (context) => HistoryDetailPage(historyData: placeData),
                       ),
                     );
                   },
-                  child: Card(
-                    child: ListTile(
-                      leading: placeData.photoUrl != null
-                          ? Image.file(File(placeData.photoUrl!), height: 50, width: 50, fit: BoxFit.cover)
-                          : const Icon(Icons.person), 
-                      title: Text(placeData.placeName),
-                      subtitle: Text('Saved on: $formattedDateTime'),
+                  child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (placeData.photoUrl != null)
+                      Image.file(File(placeData.photoUrl!), height: 120, width: 120, fit: BoxFit.cover),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                        Text(placeData.itemName),
+                      const SizedBox(height: 10.0),
+                      Text(formattedDateTime),
+                      const SizedBox(height: 10.0),
+                      Text('${placeData.itemGroup}'),
+                      const SizedBox(height: 10.0),
+                      Text(placeData.placeName),
+                                      
+                      ],),
                     ),
-                  ),
+                    
+                  ],
+                ),
+              ),
+            ),
+                  // Card(
+                  //   child: ListTile(
+                  //     leading: placeData.photoUrl != null
+                  //         ? Image.file(File(placeData.photoUrl!), height: 50, width: 50, fit: BoxFit.cover)
+                  //         : const Icon(Icons.person), 
+                  //     title: Text(placeData.itemName),
+                  //     subtitle: Column(
+                  //       children: [
+                  //         Text('Saved on: $formattedDateTime'),
+                  //         Text(placeData.placeName),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 );
               },
             );

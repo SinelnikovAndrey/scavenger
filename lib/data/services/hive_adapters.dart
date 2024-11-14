@@ -1,189 +1,160 @@
-import 'package:daily_scavenger/data/models/category.dart';
 import 'package:daily_scavenger/data/models/history/history_data.dart';
 import 'package:daily_scavenger/data/models/item/item_data.dart';
-import 'package:daily_scavenger/data/models/order_product.dart';
-import 'package:daily_scavenger/data/models/product.dart';
 import 'package:hive/hive.dart';
 
 void registerAdapters() {
-  Hive.registerAdapter(CategoryAdapter());
-  Hive.registerAdapter(ProductAdapter());
+
   Hive.registerAdapter(ItemDataAdapter()); 
+  Hive.registerAdapter(HistoryDataAdapter()); 
 }
 
 class ItemDataAdapter extends TypeAdapter<ItemData> {
   @override
-  final int typeId = 1;
+  final int typeId = 0; // This is the same typeId as in @HiveType
 
   @override
   ItemData read(BinaryReader reader) {
-    final id = reader.readInt();
-    final name = reader.readString();
-    final color = reader.readString();
-    final form = reader.readString();
-    final group = reader.readString();
-    final description = reader.readString();
-    final photoUrl = reader.readString();
-    
     return ItemData(
-      id: id, 
-      name: name,
-      color: color,
-      form: form,
-      group: group,
-      description: description,
-      photoUrl: photoUrl != '' ? photoUrl : null, 
+      id: reader.readString(),
+      name: reader.readString(),
+      color: reader.readString(),
+      form: reader.readString(),
+      group: reader.readString(),
+      description: reader.readString(),
+      photoUrl: reader.readString(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ItemData obj) {
+    writer.writeString(obj.id ?? '');
     writer.writeString(obj.name);
-    writer.writeString(obj.color);
-    writer.writeString(obj.form);
-    writer.writeString(obj.group);
-    writer.writeString(obj.description);
-    writer.writeString(obj.photoUrl ?? ''); // Write an empty string if photoUrl is null
+    writer.writeString(obj.color); // Write an empty string if null
+    writer.writeString(obj.form); 
+    writer.writeString(obj.group ?? '');
+    writer.writeString(obj.description ?? '');
+    writer.writeString(obj.photoUrl ?? '');
   }
 }
-class PlaceDataAdapter extends TypeAdapter<PlaceData> {
-  @override
-  final int typeId = 2; 
 
-  @override
-  PlaceData read(BinaryReader reader) {
-    final id = reader.readInt();
-    final placeName = reader.readString();
-    final saveDateTime = reader.read().asDateTime(); 
-    final photoUrl = reader.readString(); // Read photoUrl
 
-    return PlaceData(
-      id: id,
-      placeName: placeName,
-      saveDateTime: saveDateTime,
-      photoUrl: photoUrl, 
-    );
-  }
-
+class HistoryDataAdapter extends TypeAdapter<HistoryData> {
   @override
-  void write(BinaryWriter writer, PlaceData obj) {
+  final int typeId = 1; 
+  
+   @override
+  void write(BinaryWriter writer, HistoryData obj) {
     writer.writeInt(obj.id);
     writer.writeString(obj.placeName);
     writer.write(obj.saveDateTime);
     writer.writeString(obj.photoUrl ?? ''); // Write photoUrl (null to empty string)
+    writer.writeString(obj.placePhotoUrl ?? ''); // Write photoUrl (null to empty string)
+    writer.writeString(obj.itemName);
+    writer.writeString(obj.fetchDate); // Write photoUrl (null to empty string)
+    writer.writeString(obj.fetchTime);
+    
   }
-}
-
-class CategoryAdapter extends TypeAdapter<Category> {
-  @override
-  final int typeId = 3;
 
   @override
-  Category read(BinaryReader reader) {
-    return Category(
-      name: reader.read(),
-      description: reader.read(),
-      image: reader.read(),
-      createdAt: reader.read(),
-      updatedAt: reader.read(),
+  HistoryData read(BinaryReader reader) {
+    final id = reader.readInt();
+    final placeName = reader.readString();
+    final saveDateTime = reader.read() ; 
+    final photoUrl = reader.readString();
+    final itemName = reader.readString();
+    final placePhotoUrl = reader.readString();
+    final fetchDate = reader.readString();
+    final fetchTime = reader.readString();
+
+    return HistoryData(
+      id: id,
+      placeName: placeName,
+      saveDateTime: saveDateTime,
+      photoUrl: photoUrl, 
+      itemName: itemName, 
+      placePhotoUrl: placePhotoUrl, 
+      fetchDate: fetchDate, 
+      fetchTime: fetchTime, 
     );
-  }
+  } 
 
-  @override
-  void write(BinaryWriter writer, Category obj) {
-    writer.write(obj.name);
-    writer.write(obj.description);
-    writer.write(obj.image);
-    writer.write(obj.createdAt);
-    writer.write(obj.updatedAt);
-  }
-}
-
-class ProductAdapter extends TypeAdapter<Product> {
-  @override
-  final int typeId = 5;
-
-  @override
-  Product read(BinaryReader reader) {
-    return Product(
-      name: reader.read(),
-      // store: reader.read(),
-      description: reader.read(),
-      price: reader.read(),
-      // unit: unitFromName(reader.read()),
-      images: reader.read(),
-      // category: reader.read(),
-      brand: reader.read(),
-      nutritions: Map<String, num>.from(reader.read()),
-      createdAt: reader.read(),
-      updatedAt: reader.read(),
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, Product obj) {
-    writer.write(obj.name);
-    // writer.write(obj.store);
-    writer.write(obj.description);
-    writer.write(obj.price);
-    // writer.write(obj.unit.name);
-    writer.write(obj.images);
-    // writer.write(obj.category);
-    writer.write(obj.brand);
-    writer.write(obj.nutritions);
-    writer.write(obj.createdAt);
-    writer.write(obj.updatedAt);
-  }
+ 
 }
 
 
 
-class OrderProductAdapter extends TypeAdapter<OrderProduct> {
-  @override
-  final int typeId = 6;
-
-  @override
-  OrderProduct read(BinaryReader reader) {
-    return OrderProduct(
-      product: reader.read(),
-      quantity: reader.read(),
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, OrderProduct obj) {
-    writer.write(obj.product);
-    writer.write(obj.quantity);
-  }
-}
-
-// class ItemDataAdapter extends TypeAdapter<ItemData> {
+// class HistoryDataAdapter extends TypeAdapter<HistoryData> {
 //   @override
-//   final int typeId = 7;
+//   final int typeId = 1;
 
 //   @override
-//   ItemData read(BinaryReader reader) {
-//     final name = reader.readString();
-//     final color = reader.readString();
-//     final form = reader.readString();
-//     final group = reader.readString();
-//     final description = reader.readString();
+//   HistoryData read(BinaryReader reader) {
+//     try {
+//       final id = reader.readInt();
+//       final placeName = reader.readString();
+//       final saveDateMillis = reader.readInt();
+//       final saveTimeString = reader.readString();
+//       final placeDescription = reader.readStringOrNull();
+//       final photoUrl = reader.readStringOrNull();
+//       final itemName = reader.readString();
+//       final itemColor = reader.readStringOrNull();
+//       final itemForm = reader.readStringOrNull();
+//       final itemGroup = reader.readStringOrNull();
+//       final itemDescription = reader.readStringOrNull();
+//       final placePhotoUrl = reader.readStringOrNull();
 
-//     return ItemData(
-//       name: name,
-//       color: color,
-//       form: form,
-//       group: group,
-//       description: description,
-//     );
+//       // Convert saveTimeString back to TimeOfDay
+//       final saveTime = TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(saveTimeString));
+
+//       return HistoryData(
+//         id: id,
+//         placeName: placeName,
+//         saveDate: DateTime.fromMillisecondsSinceEpoch(saveDateMillis),
+//         saveTime: saveTime,
+//         itemName: itemName,
+//         placeDescription: placeDescription,
+//         photoUrl: photoUrl,
+//         itemColor: itemColor,
+//         itemForm: itemForm,
+//         itemGroup: itemGroup,
+//         itemDescription: itemDescription,
+//         placePhotoUrl: placePhotoUrl,
+//       );
+//     } on RangeError catch (e) {
+//       print('RangeError in HistoryDataAdapter.read(): $e');
+//       return _createDefaultHistoryData('RangeError');
+//     } on HiveError catch (e) {
+//       print('HiveError in HistoryDataAdapter.read(): $e');
+//       return _createDefaultHistoryData('HiveError');
+//     } catch (e) {
+//       print('Unexpected error in HistoryDataAdapter.read(): $e');
+//       return _createDefaultHistoryData('UnexpectedError');
+//     }
 //   }
 
 //   @override
-//   void write(BinaryWriter writer, ItemData obj) {
-//     writer.writeString(obj.name);
-//     writer.writeString(obj.color);
-//     writer.writeString(obj.form);
-//     writer.writeString(obj.group);
-//     writer.writeString(obj.description);
+//   void write(BinaryWriter writer, HistoryData obj) {
+//     writer.writeInt(obj.id);
+//     writer.writeString(obj.placeName);
+//     writer.writeInt(obj.saveDate.millisecondsSinceEpoch); 
+//     writer.writeString(DateFormat('HH:mm').format(obj.saveTime)); 
+//     writer.writeString(obj.placeDescription ?? '');
+//     writer.writeString(obj.photoUrl ?? '');
+//     writer.writeString(obj.itemName);
+//     writer.writeString(obj.itemColor ?? '');
+//     writer.writeString(obj.itemForm ?? '');
+//     writer.writeString(obj.itemGroup ?? '');
+//     writer.writeString(obj.itemDescription ?? '');
+//     writer.writeString(obj.placePhotoUrl ?? '');
+//   }
+
+//   HistoryData _createDefaultHistoryData(String errorMessage) {
+//     return HistoryData(
+//       id: -1,
+//       placeName: 'Error',
+//       saveDateTime: DateTime.now(),
+//       itemName: 'Error',
+//       placeDescription: errorMessage,
+//     );
 //   }
 // }

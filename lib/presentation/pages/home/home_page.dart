@@ -1,11 +1,8 @@
-import 'package:daily_scavenger/bloc/product/item_bloc.dart';
-import 'package:daily_scavenger/data/repositories/item_repository.dart';
+
 import 'package:daily_scavenger/presentation/pages/history_item/history_page.dart';
 import 'package:daily_scavenger/presentation/pages/home/my_items_page.dart';
-import 'package:daily_scavenger/presentation/utils/app_colors.dart';
 import 'package:daily_scavenger/presentation/utils/assets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:flutter_svg/svg.dart';
 
@@ -72,37 +69,37 @@ class _HomePageState extends State<HomePage> {
               selectedIcon: SvgPicture.asset(SvgAssets.explore),
               label: 'Explore',
             ),
-            BlocBuilder<ItemBloc, ItemState>(
-              builder: (context, state) {
-                return NavigationDestination(
-                  icon: Badge(
-                    backgroundColor: AppColors.primary,
-                    isLabelVisible: ItemRepository.cart.isNotEmpty,
-                    label: Text(
-                      ItemRepository.cart.length.toString(),
-                    ),
-                    offset: const Offset(10, -10),
-                    child: SvgPicture.asset(
-                      SvgAssets.cart,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.black,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                  selectedIcon: Badge(
-                    backgroundColor: AppColors.primary,
-                    isLabelVisible: ItemRepository.cart.isNotEmpty,
-                    label: Text(
-                      ItemRepository.cart.length.toString(),
-                    ),
-                    offset: const Offset(10, -10),
-                    child: SvgPicture.asset(SvgAssets.cart),
-                  ),
-                  label: 'Cart',
-                );
-              },
-            ),
+            // BlocBuilder<MyItemsBloc, MyItemsState>(
+            //   builder: (context, state) {
+            //     return NavigationDestination(
+            //       icon: Badge(
+            //         backgroundColor: AppColors.primary,
+            //         isLabelVisible: ItemRepository.cart.isNotEmpty,
+            //         label: Text(
+            //           ItemRepository.cart.length.toString(),
+            //         ),
+            //         offset: const Offset(10, -10),
+            //         child: SvgPicture.asset(
+            //           SvgAssets.cart,
+            //           colorFilter: const ColorFilter.mode(
+            //             Colors.black,
+            //             BlendMode.srcIn,
+            //           ),
+            //         ),
+            //       ),
+            //       selectedIcon: Badge(
+            //         backgroundColor: AppColors.primary,
+            //         isLabelVisible: ItemRepository.cart.isNotEmpty,
+            //         label: Text(
+            //           ItemRepository.cart.length.toString(),
+            //         ),
+            //         offset: const Offset(10, -10),
+            //         child: SvgPicture.asset(SvgAssets.cart),
+            //       ),
+            //       label: 'Cart',
+            //     );
+            //   },
+            // ),
             NavigationDestination(
               icon: SvgPicture.asset(
                 SvgAssets.favorite,
@@ -133,7 +130,6 @@ class _HomePageState extends State<HomePage> {
         children: const [
          MyItemsPage(),
           HistoryPage(),
-          MyItemsPage(),
           MyItemsPage(),
           MyItemsPage(),
         ],

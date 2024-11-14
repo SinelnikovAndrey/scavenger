@@ -1,4 +1,7 @@
+import 'package:daily_scavenger/data/models/item/item_data.dart';
 import 'package:daily_scavenger/presentation/pages/add_item/add_item.dart';
+import 'package:daily_scavenger/presentation/pages/item_page/item_detail.dart';
+
 import 'package:flutter/material.dart';
 
 
@@ -33,6 +36,8 @@ class AppRouter {
   static const String splashRoute = '/splash';
   static const String verificationRoute = '/verification';
   static const String addItemRoute = '/addItem';
+  static const String itemDetailRoute = '/itemDetail'; 
+
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -49,10 +54,17 @@ class AppRouter {
       //     builder: (_) =>
       //         CategoryProductsPage(category: settings.arguments as Category),
       //   );
-      // case cartRoute:
+      // case itemDetailRoute:
       //   return MaterialPageRoute<dynamic>(
-      //     builder: (_) => const CartPage(),
+      //     builder: (_) => const ItemDetailPage(itemId: null,),
       //   );
+       case itemDetailRoute:
+        // Extract the itemId from the route arguments
+       
+          return MaterialPageRoute(builder: (_) => ItemDetailPage(id: settings.arguments as ItemData,));
+        
+         // Or handle the case where the itemId is missing
+      
       // case exploreRoute:
       //   return MaterialPageRoute<dynamic>(
       //     builder: (_) => const ExplorePage(),
