@@ -7,7 +7,7 @@ part 'item_data.g.dart';
 @HiveType(typeId: 0)
 class ItemData extends HiveObject {
   @HiveField(0)
-  String? id;
+  String id;
 
   @HiveField(1)
   final String name;
@@ -19,10 +19,10 @@ class ItemData extends HiveObject {
   String form;
 
   @HiveField(4)
-  String? group;
+  String group;
 
   @HiveField(5)
-  String? description;
+  String description;
 
   @HiveField(6)
   String? photoUrl;
@@ -32,8 +32,8 @@ class ItemData extends HiveObject {
     required this.name,
     required this.color,
     required this.form,
-    this.group,
-    this.description,
+    required this.group,
+    required this.description,
     this.photoUrl,
   });
 
@@ -79,7 +79,7 @@ class ItemData extends HiveObject {
       color: map['color'] as String,
       form: map['form'] as String,
       group: map['group'] as String,
-      description: map['description'] != null ? map['description'] as String : null,
+      description: map['description'] as String,
       photoUrl: map['form'] as String,
 
       // store: map['store'] as DocumentReference, 

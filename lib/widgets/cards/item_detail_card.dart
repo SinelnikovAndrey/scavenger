@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:daily_scavenger/data/models/item/item_data.dart';
-import 'package:daily_scavenger/presentation/pages/history_item/add_place.dart';
 import 'package:flutter/material.dart';
 
 class ItemDetailCard extends StatelessWidget {

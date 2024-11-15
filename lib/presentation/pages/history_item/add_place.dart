@@ -18,9 +18,9 @@ class AddPlacePage extends StatefulWidget {
   final String? itemId;
 
   const AddPlacePage({
-    Key? key,
+    super.key,
     required this.itemId,
-  }) : super(key: key);
+  });
 
   @override
   State<AddPlacePage> createState() => _AddPlacePageState();

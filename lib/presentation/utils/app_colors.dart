@@ -15,3 +15,15 @@ class AppColors {
   static const Color facebookBlue = Color(0xFF4A66AC);
   static const Color error = Color(0xFFD0421B);
 }
+
+
+final Map<String, Color> colorMap = {
+    'Red': Colors.red,
+    'Grey': Colors.grey,
+    'Black': Colors.black,
+    'Brown': Colors.brown,
+    'Blue': Colors.blue,
+    'Green': Colors.green,
+    'Yellow': Colors.yellow,
+  };
+

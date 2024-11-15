@@ -169,6 +169,7 @@ import 'package:daily_scavenger/presentation/utils/app_fonts.dart';
 import 'package:daily_scavenger/widgets/cards/item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MyItemsPage extends StatefulWidget {
   const MyItemsPage({super.key});
@@ -180,33 +181,74 @@ class MyItemsPage extends StatefulWidget {
 class _MyItemsPageState extends State<MyItemsPage> {
   bool ignoring = false;
   final List<String> _dropdownValues = ["One", "Two", "Three", "Four", "Five"];
+  final RefreshController _refreshController = RefreshController();
+
 
   @override
   void initState() {
     super.initState();
+    // Future.delayed( Duration.zero, () {
+    //   BlocProvider.of<MyItemsBloc>(context)
+    //       .add(MyItemsLoadEvent());
+    //           });
     context.read<MyItemsBloc>().add(MyItemsLoadEvent());
   }
 
   @override
+  void dispose() {
+    _refreshController.dispose(); 
+    super.dispose();
+    
+  }
+
+
+  Future<void> _onRefresh() async {
+    try {
+ 
+      context.read<MyItemsBloc>().add(MyItemsLoadEvent());
+
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      _refreshController.refreshCompleted();
+    } catch (error) {
+      _refreshController.refreshFailed();
+    }
+  }
+
+
+   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MyItemsBloc, MyItemsState>(
-      builder: (context, state) {
-        if (state is MyItemsLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else if (state is MyItemsLoaded) {
-          return _buildLoaded(state);
-        } else {
-          return const Scaffold(
-            body: Center(
-              child: Text('Something went wrong'),
-            ),
-          );
-        }
-      },
+    return SmartRefresher(
+        enablePullDown: true,
+        header: WaterDropHeader(),
+        controller: _refreshController,
+        onRefresh: _onRefresh, 
+      child: BlocBuilder<MyItemsBloc, MyItemsState>(
+        builder: (context, state) {
+          if (state is MyItemsLoading) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else if (state is MyItemsLoaded) {
+            return _buildLoaded(state);
+          } else if (state is MyItemsFailure) {  
+            return Scaffold(
+              body: Center(
+                child: Text(state.message), 
+              ),
+            );
+          } else { 
+            return const Scaffold(
+              body: Center(
+                child: Text('Something went wrong'),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -233,7 +275,9 @@ class _MyItemsPageState extends State<MyItemsPage> {
           child: const Text('Add new item'),
         ),
       ),
+     
       body: Padding(
+        
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: Column(
@@ -319,6 +363,8 @@ class _MyItemsPageState extends State<MyItemsPage> {
     );
   }
 }
+
+
 
 ///>>>>>>>>>>>>><<<<<<<<<<<<<<<///
 

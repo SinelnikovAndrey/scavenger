@@ -1,5 +1,6 @@
 import 'package:daily_scavenger/data/models/item/item_data.dart';
 import 'package:daily_scavenger/presentation/pages/add_item/add_item.dart';
+import 'package:daily_scavenger/presentation/pages/home/my_items_page.dart';
 import 'package:daily_scavenger/presentation/pages/item_page/item_detail.dart';
 
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class AppRouter {
   static const String accountRoute = '/account';
   static const String categoryProductsRoute = '/category-products';
   static const String cartRoute = '/cart';
-  static const String exploreRoute = '/explore';
+  static const String myItemsPageRoute = '/myItemsPage';
   static const String favoritesRoute = '/favorite';
   static const String addPlaceRoute = '/addPlaceRoute';
   static const String forgotPasswordRoute = '/forgot-password';
@@ -65,10 +66,10 @@ class AppRouter {
         
          // Or handle the case where the itemId is missing
       
-      // case exploreRoute:
-      //   return MaterialPageRoute<dynamic>(
-      //     builder: (_) => const ExplorePage(),
-      //   );
+      case myItemsPageRoute:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => const MyItemsPage(),
+        );
       // case addPlaceRoute:
       //   return MaterialPageRoute<dynamic>(
       //     builder: (_) => const AddPlacePage(userId: null,),

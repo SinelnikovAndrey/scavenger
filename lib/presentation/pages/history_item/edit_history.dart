@@ -13,7 +13,7 @@ const String historyBoxName = 'places';
 class EditHistoryPage extends StatefulWidget {
   final HistoryData placeData;
 
-  const EditHistoryPage({Key? key, required this.placeData}) : super(key: key);
+  const EditHistoryPage({super.key, required this.placeData});
 
   @override
   State<EditHistoryPage> createState() => _EditHistoryPageState();

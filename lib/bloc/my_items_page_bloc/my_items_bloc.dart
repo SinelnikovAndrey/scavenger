@@ -18,32 +18,52 @@ class MyItemsBloc extends Bloc<MyItemsEvent, MyItemsState> {
   MyItemsBloc() : super(MyItemsInitial()) {
     itemBox = Hive.box<ItemData>('myBox'); 
     final itemService = ItemService(itemBox);
-    on<FetchMyItemsPageData>((event, emit) async {
-      emit(MyItemsLoading());
-      try {
-        final myItemsList = await itemService.getItems();
-            emit(
-          MyItemsLoaded(
-            items: myItemsList,
+    // on<FetchMyItemsPageData>((event, emit) async {
+    //   emit(MyItemsLoading());
+    //   try {
+    //     final myItemsList = await itemService.getItems();
+    //         emit(
+    //       MyItemsLoaded(
+    //         items: myItemsList,
            
-          ),
-        );
-      } catch (e, s) {
-        debugPrintStack(label: e.toString(), stackTrace: s);
-        emit(MyItemsFailure(message: e.toString()));
-      }
-    });
+    //       ),
+    //     );
+    //   } catch (e, s) {
+    //     debugPrintStack(label: e.toString(), stackTrace: s);
+    //     emit(MyItemsFailure(message: e.toString()));
+    //   }
+    // });
     on<MyItemsLoadEvent>(_onLoadItems);
+    on<LoadCurrentItemEvent>(_onLoadCurrentItem);
     on<MyItemsNavigateToAddItemEvent>(_onNavigateToAddItem);
     on<MyItemsNavigateToDetailEvent>(_onNavigateToDetail); 
   }
 }
+
+
+
   void _onLoadItems(MyItemsLoadEvent event, Emitter<MyItemsState> emit) async {
     emit(MyItemsLoading());
     
     try {
+      
       final items = itemBox.values.toList();
       emit(MyItemsLoaded(items: items, ));
+    } catch (e) {
+      emit(MyItemsFailure(message: e.toString()));
+    }
+  }
+
+  void _onLoadCurrentItem(LoadCurrentItemEvent event, Emitter<MyItemsState> emit) async {
+    emit(MyItemsLoading());
+
+    try {
+      final currentItem = itemBox.get(event.itemId);
+      if (currentItem != null) {
+        emit(CurrentItemLoaded(currentItem: currentItem));
+      } else {
+        emit(MyItemsFailure(message: 'Item not found'));
+      }
     } catch (e) {
       emit(MyItemsFailure(message: e.toString()));
     }

@@ -17,12 +17,12 @@ class ItemDataAdapter extends TypeAdapter<ItemData> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ItemData(
-      id: fields[0] as String?,
+      id: fields[0] as String,
       name: fields[1] as String,
       color: fields[2] as String,
       form: fields[3] as String,
-      group: fields[4] as String?,
-      description: fields[5] as String?,
+      group: fields[4] as String,
+      description: fields[5] as String,
       photoUrl: fields[6] as String?,
     );
   }

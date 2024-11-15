@@ -13,6 +13,11 @@ class FetchMyItemsPageData extends MyItemsEvent {
 }
 
 class MyItemsLoadEvent extends MyItemsEvent {}
+class LoadCurrentItemEvent extends MyItemsEvent {
+  final String itemId;
+
+  const LoadCurrentItemEvent({required this.itemId});
+}
 
 
 class MyItemsNavigateToAddItemEvent extends MyItemsEvent {

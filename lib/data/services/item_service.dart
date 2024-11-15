@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:daily_scavenger/data/models/item/item_data.dart';
-import 'package:daily_scavenger/data/models/item/item_repo.dart';
 import 'package:hive/hive.dart';
 
 class ItemService {

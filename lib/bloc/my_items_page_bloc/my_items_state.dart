@@ -12,14 +12,33 @@ class MyItemsInitial extends MyItemsState {}
 
 class MyItemsLoading extends MyItemsState {}
 
+// class CurrentItemLoaded extends MyItemsState {
+//   final ItemData currentItem;
+
+
+//   const CurrentItemLoaded({required this.currentItem,});
+
+//   @override
+//   List<Object?> get props => [currentItem];
+// }
+
+class CurrentItemLoaded extends MyItemsState {
+  final ItemData currentItem;
+
+  const CurrentItemLoaded({required this.currentItem});
+
+   @override
+  List<Object?> get props => super.props..add(currentItem);
+}
 class MyItemsLoaded extends MyItemsState {
   final List<ItemData> items;
+  
 
 
   const MyItemsLoaded({required this.items,});
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => super.props..add(items);
 }
 
 class MyItemsFailure extends MyItemsState {
